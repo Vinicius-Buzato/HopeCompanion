@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mascote da Esperanca</title>
+<style>
+  /* RESET MINIMO */
+  * {box-sizing:border-box; margin:0; padding:0; font-family: Arial, Helvetica, sans-serif;}
+  html,body {height:100%;}
+  body{display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#f5f8ff,#e8f0ff); color:#222;}
+  .app { width: 96vw; max-width:420px; background:#fff; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.08); padding:16px; }
+  header {display:flex; gap:12px; align-items:center; margin-bottom:12px;}
+  .title {font-weight:700; font-size:18px;}
+  .mascot { width:84px; height:84px; flex:0 0 84px; display:flex; align-items:center; justify-content:center; }
+  /* SVG bob animation */
+  .mascot svg { width:72px; height:72px; transition:transform .25s ease; }
+  .mascot.animate svg { animation:bob 2s ease-in-out infinite; }
+  @keyframes bob { 0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)} }
+  main {display:grid; gap:10px;}
+  .panel { background:#fbfdff; border-radius:8px; padding:10px; box-shadow: inset 0 1px 0 rgba(0,0,0,0.02); }
+  .row {display:flex; gap:8px; align-items:center;}
+  button {flex:1; padding:10px; border-radius:8px; border:0; background:#3466ff; color:#fff; font-weight:600; cursor:pointer;}
+  button.secondary {background:#6c757d;}
+  .small {font-size:13px; padding:8px;}
+  .mem-list {max-height:160px; overflow:auto; margin-top:8px; display:flex; flex-direction:column; gap:8px;}
+  .mem-item {background:#fff; border-radius:6px; padding:8px; box-shadow:0 1px 0 rgba(0,0,0,0.04); font-size:14px;}
+  label {font-size:13px; color:#444; margin-bottom:6px; display:block;}
+  input[type="text"]{width:100%; padding:8px; border-radius:6px; border:1px solid #ddd;}
+  .controls {display:flex; gap:8px;}
+  footer {margin-top:10px; font-size:12px; color:#666; text-align:center;}
+  .toggle {display:flex; align-items:center; gap:6px; cursor:pointer; user-select:none;}
+  audio {display:none;}
+</style>
+</head>
+<body>
+  <div class="app" role="application" aria-label="Mascote da Esperanca">
+    <header>
+      <div class="mascot animate" id="mascotEl" aria-hidden="true">
+        <!-- Mascote SVG simples, leve -->
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="32" cy="32" r="30" fill="#ffd966"/>
+          <circle cx="22" cy="26" r="4" fill="#222"/>
+          <circle cx="42" cy="26" r="4" fill="#222"/>
+          <path d="M20 40 Q32 48 44 40" stroke="#222" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="32" cy="32" r="28" fill="none" stroke="#f4b400" stroke-width="2"/>
+        </svg>
+      </div>
+      <div>
+        <div class="title">Mascote da Esperanca</div>
+        <div style="font-size:13px;color:#666;">Um lembrete rapido: dias melhores viram</div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Interacoes principais -->
+      <div class="panel">
+        <div class="row" style="margin-bottom:8px;">
+          <button id="btnPhrase">Frase motivadora</button>
+          <button id="btnMemory" class="secondary small">Memorias</button>
+        </div>
+        <div class="row">
+          <button id="btnPlay" class="small">Tocar musica</button>
+          <button id="btnAddMem" class="secondary small">Adicionar memoria</button>
+        </div>
+      </div>
+
+      <!-- Display area -->
+      <div id="display" class="panel" style="min-height:64px; display:flex; align-items:center; justify-content:center; font-size:15px; text-align:center;">
+        Clique em um botao para comecar
+      </div>
+
+      <!-- Memorias -->
+      <div class="panel" id="memPanel" style="display:none;">
+        <label>Minhas memorias (toque para remover)</label>
+        <div class="mem-list" id="memList" aria-live="polite"></div>
+        <div style="margin-top:8px;">
+          <input id="memInput" type="text" placeholder="Escreva uma memoria curta (ex: passeio, conquista)">
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button id="memSave">Salvar memoria</button>
+            <button id="memClose" class="secondary">Fechar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Opcoes -->
+      <div class="panel row" style="justify-content:space-between;">
+        <div class="toggle" id="animToggle"><input id="animChk" type="checkbox" checked> <span>Animacoes</span></div>
+        <div class="toggle"><button id="clearAll" class="secondary small">Limpar memorias</button></div>
+      </div>
+    </main>
+
+    <footer>
+      Dados locais. Privacidade garantida.
+    </footer>
+
+    <!-- Audio element (sera carregado sob demanda) -->
+    <audio id="audioPlayer" preload="none"></audio>
+  </div>
+
+<script>
+/* APP LIGHTWEIGHT - logic em vanilla JS */
+(function(){
+  const PHRASES = [
+    "Voce ja passou por coisas dificeis e venceu. Confie em si.",
+    "Respira. Um passo de cada vez. Dias melhores viram.",
+    "Mesmo pequena, uma acao positiva tem poder.",
+    "Voce e mais forte do que imagina. Continue.",
+    "Lembre: ha sempre algo pelo qual ser grato hoje."
+  ];
+
+  const mascotEl = document.getElementById('mascotEl');
+  const btnPhrase = document.getElementById('btnPhrase');
+  const display = document.getElementById('display');
+  const btnMemory = document.getElementById('btnMemory');
+  const memPanel = document.getElementById('memPanel');
+  const memList = document.getElementById('memList');
+  const memInput = document.getElementById('memInput');
+  const memSave = document.getElementById('memSave');
+  const memClose = document.getElementById('memClose');
+  const btnAddMem = document.getElementById('btnAddMem');
+  const animChk = document.getElementById('animChk');
+  const animToggle = document.getElementById('animToggle');
+  const clearAll = document.getElementById('clearAll');
+  const audioPlayer = document.getElementById('audioPlayer');
+  const btnPlay = document.getElementById('btnPlay');
+
+  const LS_KEY = 'mascote_memorias_v1';
+
+  // util: carregar memorias do localStorage
+  function loadMemories(){
+    try{
+      const raw = localStorage.getItem(LS_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  // util: salvar memorias
+  function saveMemories(arr){
+    try{ localStorage.setItem(LS_KEY, JSON.stringify(arr)); }catch(e){}
+  }
+
+  // mostrar frase motivadora aleatoria
+  btnPhrase.addEventListener('click', () => {
+    const txt = PHRASES[Math.floor(Math.random() * PHRASES.length)];
+    showDisplay(txt);
+    // leve feedback: pequeno grow
+    mascotEl.classList.add('pulse');
+    setTimeout(()=> mascotEl.classList.remove('pulse'), 450);
+  });
+
+  // mostrar/alternar painel de memorias
+  btnMemory.addEventListener('click', ()=> toggleMemPanel(true));
+  memClose.addEventListener('click', ()=> toggleMemPanel(false));
+  btnAddMem.addEventListener('click', ()=> toggleMemPanel(true));
+
+  function toggleMemPanel(show){
+    memPanel.style.display = show ? 'block' : 'none';
+    if(show) renderMemList();
+  }
+
+  // renderizar lista de memorias
+  function renderMemList(){
+    memList.innerHTML = '';
+    const arr = loadMemories();
+    if(arr.length === 0){
+      memList.innerHTML = '<div class="mem-item" style="color:#666;">Nenhuma memoria salva ainda</div>';
+      return;
+    }
+    // inserir do mais recente para o mais antigo
+    for(let i = arr.length-1; i >= 0; i--){
+      const item = arr[i];
+      const div = document.createElement('div');
+      div.className = 'mem-item';
+      div.textContent = item;
+      // toque para mostrar no display
+      div.addEventListener('click', ()=> showDisplay(item));
+      // toque longo para remover (mobile-friendly: duplo clique)
+      div.addEventListener('dblclick', ()=> {
+        if(confirm('Remover esta memoria?')) {
+          arr.splice(i,1);
+          saveMemories(arr);
+          renderMemList();
+        }
+      });
+      memList.appendChild(div);
+    }
+  }
+
+  // salvar memoria
+  memSave.addEventListener('click', ()=>{
+    const v = memInput.value.trim();
+    if(!v) { alert('Escreva algo antes de salvar'); return; }
+    const arr = loadMemories();
+    arr.push(v);
+    saveMemories(arr);
+    memInput.value = '';
+    renderMemList();
+    showDisplay('Memoria salva :)');
+  });
+
+  // limpar tudo
+  clearAll.addEventListener('click', ()=>{
+    if(confirm('Remover todas as memorias?')){
+      saveMemories([]);
+      renderMemList();
+      showDisplay('Memorias removidas');
+    }
+  });
+
+  // display helper
+  function showDisplay(text){
+    display.textContent = text;
+    // pequena animacao de destaque
+    display.style.opacity = '0.95';
+    setTimeout(()=> display.style.opacity = '1', 120);
+  }
+
+  // animacoes on/off
+  animChk.addEventListener('change', (e)=>{
+    if(e.target.checked) mascotEl.classList.add('animate'); else mascotEl.classList.remove('animate');
+  });
+
+  // musica: carregar arquivo quando o usuario pedir
+  btnPlay.addEventListener('click', async ()=>{
+    // se audio vazio, carregamos um pequeno mp3 (ou voce pode apontar para URL)
+    if(!audioPlayer.src){
+      // Exemplo: voce pode usar um arquivo local 'musica.mp3' na mesma pasta
+      // Ou setar uma url remota curta. Aqui deixamos comentario para o dev incluir.
+      // audioPlayer.src = 'musica_curta.mp3';
+      // Para demo sem arquivo, mostramos mensagem
+      showDisplay('Adicione um arquivo "musica.mp3" na pasta do site para tocar');
+      return;
+    }
+    try{
+      await audioPlayer.play();
+      showDisplay('Musica tocando...');
+    }catch(e){
+      showDisplay('Erro ao tocar. Verifique a fonte do audio.');
+    }
+  });
+
+  // registro de service worker (se hospedado via http/https)
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('service-worker.js').then(()=> {
+      console.log('SW registrado');
+    }).catch(()=>{ /* falha silenciosa */ });
+  }
+
+  // inicializacao
+  (function init(){
+    // garantir o estado do checkbox
+    animChk.checked = true;
+    // start anim
+    mascotEl.classList.add('animate');
+    // render memoria (se painel estiver aberto)
+    // carregar memorias se necessario
+    // opcional: mostrar saudacao
+    const mems = loadMemories();
+    if(mems.length>0) showDisplay('Bom lembrar: ' + mems[mems.length-1]);
+    else showDisplay('Bem vindo! Clique em "Frase motivadora" para comecar.');
+  })();
+
+})();
+</script>
+</body>
+</html>
