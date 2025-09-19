@@ -5,123 +5,99 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mascote da Esperanca</title>
 <style>
-  /* RESET MINIMO */
+  /* RESET + base */
   *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
   html,body{height:100%}
-  body{display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#f5f8ff,#e8f0ff);color:#111;transition:background .25s,color .25s}
-  .dark body, .dark{background:#0b0b0f;color:#e8eef8}
-  .app{width:96vw;max-width:420px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:14px;transition:background .2s,color .2s}
-  .dark .app{background:#0f1720;box-shadow:0 6px 18px rgba(0,0,0,.45)}
-  header{display:flex;gap:12px;align-items:center;margin-bottom:12px}
-  .title{font-weight:700;font-size:18px}
-  .subtitle{font-size:13px;color:#5b6b86}
-  .dark .subtitle{color:#9fb0d9}
-  /* PIXEL ART MASCOT */
-  .mascot{width:84px;height:84px;flex:0 0 84px;display:flex;align-items:center;justify-content:center}
-  .mascot svg{width:72px;height:72px;image-rendering:pixelated;transition:transform .2s}
-  .mascot.animate svg{animation:bob 2s ease-in-out infinite}
-  @keyframes bob{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
-  main{display:grid;gap:10px}
-  .panel{background:transparent;border-radius:8px;padding:8px}
-  /* minimal buttons */
-  .controls{display:flex;gap:8px}
-  button{flex:1;padding:10px;border-radius:10px;border:1px solid transparent;background:linear-gradient(180deg, rgba(52,102,255,0.12), rgba(52,102,255,0.06));color:#2347d6;font-weight:700;cursor:pointer;font-size:14px;backdrop-filter:blur(2px)}
-  .dark button{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));color:#bcd3ff;border:1px solid rgba(255,255,255,0.04)}
+  body{display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#eef2ff,#e6e9ff);color:#111;transition:background .25s,color .25s}
+  .dark body, .dark{background:#0b0f18;color:#e6eef8}
+  .wrap{width:100vw;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
+  .app{width:100%;max-width:520px;background:transparent;border-radius:12px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:12px}
+  /* MASCOT AREA - center large */
+  .mascot-area{width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
+  .mascot-wrap{width:100%;display:flex;align-items:center;justify-content:center}
+  .mascot{width:320px;height:320px;image-rendering:pixelated;display:block}
+  @media (max-width:420px){ .mascot{width:260px;height:260px} }
+  /* Speech bubble */
+  .bubble-wrap{position:relative;width:100%;display:flex;justify-content:center;pointer-events:none}
+  .bubble{max-width:88%;min-height:56px;background:linear-gradient(180deg,#ffffff,#f3f7ff);padding:12px 14px;border-radius:14px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 8px 24px rgba(20,30,80,0.06);font-size:16px;text-align:center;pointer-events:auto;transition:transform .18s ease,opacity .18s}
+  .dark .bubble{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-color:rgba(255,255,255,0.04);box-shadow:none;color:#dbe9ff}
+  .bubble::after{content:'';position:absolute;left:50%;transform:translateX(-50%);bottom:-10px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:10px solid #fff}
+  .dark .bubble::after{border-top-color:rgba(255,255,255,0.02)}
+  .bubble.hidden{opacity:0;transform:translateY(-6px);pointer-events:none}
+  /* Buttons minimal */
+  .controls{display:flex;gap:10px;width:100%;max-width:420px;justify-content:center;padding-top:6px}
+  button{padding:10px 14px;border-radius:999px;border:0;background:#fff;color:#3b49d6;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(35,55,160,0.08);font-size:14px;min-width:120px}
+  .dark button{background:rgba(255,255,255,0.03);color:#cfe0ff;box-shadow:none;border:1px solid rgba(255,255,255,0.03)}
   button.ghost{background:transparent;color:#666;border:1px solid rgba(0,0,0,0.06)}
-  .dark button.ghost{color:#a8bfdc;border-color:rgba(255,255,255,0.04)}
-  #display{min-height:72px;background:rgba(255,255,255,0.9);border-radius:10px;display:flex;align-items:center;justify-content:center;padding:10px;text-align:center;font-size:15px;box-shadow:inset 0 1px 0 rgba(0,0,0,0.02)}
-  .dark #display{background:rgba(255,255,255,0.02)}
-  .mem-list{display:flex;flex-direction:column;gap:8px;max-height:180px;overflow:auto;margin-top:8px}
-  .mem-item{padding:8px;border-radius:8px;background:linear-gradient(180deg,#fff,#fbfdff);font-size:14px;cursor:pointer;box-shadow:0 1px 0 rgba(0,0,0,.03)}
-  .dark .mem-item{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));box-shadow:none;color:#dbe9ff}
-  footer{margin-top:10px;font-size:12px;color:#6b7380;text-align:center}
-  .top-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
-  .toggle{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;font-size:13px;color:#5b6b86}
-  .dark .toggle{color:#9fb0d9}
-  .small{font-size:13px;padding:8px}
-  audio{display:none}
-  /* responsive touch */
-  @media (max-width:380px){button{font-size:13px;padding:9px}}
+  .dark button.ghost{color:#a8bfdc;border-color:rgba(255,255,255,0.03)}
+  .top-controls{display:flex;gap:8px;align-items:center;justify-content:center;width:100%}
+  .small-toggle{font-size:13px;color:#556680;cursor:pointer}
+  .dark .small-toggle{color:#93ace2}
+  footer{margin-top:4px;font-size:12px;color:#6b7380;text-align:center}
 </style>
 </head>
 <body>
-  <div class="app" role="application" aria-label="Mascote da Esperanca">
-    <header>
-      <div class="mascot animate" id="mascotEl" aria-hidden="true">
-        <!-- PIXEL-ART TRICERATOPS (cabeca) -->
-        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <!-- base pixel grid: each rect is a "pixel" -->
-          <!-- tons de roxo -->
-          <rect x="0" y="0" width="32" height="32" fill="transparent"/>
-          <!-- preenchimento com blocos para formar a cabeca de triceratops -->
-          <!-- casco/horn pixels -->
-          <rect x="2" y="6" width="4" height="4" fill="#6a3aa6"/>
-          <rect x="5" y="4" width="4" height="4" fill="#6a3aa6"/>
-          <rect x="8" y="4" width="6" height="6" fill="#7b4bd1"/>
-          <rect x="14" y="6" width="6" height="6" fill="#8a64e6"/>
-          <rect x="20" y="8" width="6" height="6" fill="#6a3aa6"/>
-          <!-- chifres -->
-          <rect x="22" y="2" width="2" height="4" fill="#c9a8ff"/>
-          <rect x="6" y="2" width="2" height="4" fill="#c9a8ff"/>
-          <!-- rosto e detalhes -->
-          <rect x="10" y="10" width="12" height="10" fill="#6e3fb3"/>
-          <rect x="12" y="12" width="3" height="3" fill="#fff"/>
-          <rect x="17" y="12" width="3" height="3" fill="#fff"/>
-          <!-- olho escuro -->
-          <rect x="12" y="13" width="1" height="1" fill="#1a1a1a"/>
-          <rect x="18" y="13" width="1" height="1" fill="#1a1a1a"/>
-          <!-- bochecha levemente mais clara -->
-          <rect x="11" y="15" width="2" height="2" fill="#8b67d6"/>
-          <rect x="18" y="15" width="2" height="2" fill="#8b67d6"/>
-          <!-- contorno -->
-          <rect x="9" y="9" width="14" height="12" fill="none" stroke="#472569" stroke-width="0"/>
-          <!-- reflexo -->
-          <rect x="14" y="9" width="2" height="1" fill="#caa8ff"/>
-        </svg>
-      </div>
-      <div style="flex:1">
-        <div class="title">Mascote da Esperanca</div>
-        <div class="subtitle">Um lembrete rapido: dias melhores viram</div>
-      </div>
-    </header>
-
-    <main>
-      <div class="top-row">
-        <div class="toggle" id="darkToggle" title="Modo escuro">
-          <input id="darkChk" type="checkbox"> <span id="darkLabel">Modo escuro</span>
-        </div>
-        <div class="toggle" id="animToggle"><input id="animChk" type="checkbox" checked> Animacoes</div>
+  <div class="wrap">
+    <div class="app" role="application" aria-label="Mascote da Esperanca">
+      <!-- opcao topo -->
+      <div class="top-controls">
+        <label class="small-toggle"><input id="darkChk" type="checkbox"> Modo escuro</label>
+        <label style="margin-left:10px" class="small-toggle"><input id="animChk" type="checkbox" checked> Animacoes</label>
       </div>
 
-      <div class="panel">
-        <div class="controls" style="margin-bottom:8px">
-          <button id="btnPhrase">Frase motivadora</button>
-          <button id="btnMem" class="ghost small">Memorias</button>
+      <!-- area mascote centralizada -->
+      <div class="mascot-area">
+        <div class="bubble-wrap">
+          <div id="bubble" class="bubble hidden" aria-live="polite"> </div>
         </div>
-        <div class="controls">
-          <button id="btnPlay" class="small ghost">Tocar musica</button>
-          <button id="btnShare" class="small">Compartilhar</button>
+
+        <div class="mascot-wrap">
+          <!-- SVG pixel-art triceratops roxo (maior, parecido com referencia) -->
+          <svg id="mascotSvg" class="mascot" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="128" height="128" fill="transparent"/>
+            <!-- Pixel grid built with rectangles - purple palette inspired by the image -->
+            <!-- Main head/body pixels -->
+            <!-- Row definitions - simplified block art -->
+            <!-- Note: using larger rects to form pixel look; image-rendering:pixelated applied -->
+            <g>
+              <!-- background outline -->
+              <rect x="8" y="36" width="104" height="56" fill="#2f1b3a"/>
+              <!-- fill head -->
+              <rect x="12" y="40" width="96" height="48" fill="#6f46b9"/>
+              <!-- lighter regions -->
+              <rect x="68" y="44" width="20" height="12" fill="#9571e6"/>
+              <rect x="28" y="48" width="18" height="10" fill="#8b63d9"/>
+              <!-- nostril / face detail -->
+              <rect x="34" y="62" width="6" height="6" fill="#2b1a2f"/>
+              <!-- eye -->
+              <rect x="54" y="54" width="10" height="10" fill="#ffffff"/>
+              <rect x="56" y="56" width="4" height="4" fill="#151515"/>
+              <!-- horns -->
+              <rect x="84" y="28" width="10" height="14" fill="#eac56e"/>
+              <rect x="18" y="24" width="10" height="14" fill="#eac56e"/>
+              <rect x="28" y="12" width="16" height="12" fill="#f5d79b" opacity="0.95"/>
+              <!-- cheek sparkle -->
+              <rect x="46" y="66" width="6" height="6" fill="#b69ef5" opacity="0.9"/>
+              <!-- decorative darker edges for pixel look -->
+              <rect x="100" y="44" width="12" height="40" fill="#2f1b3a"/>
+              <rect x="8" y="44" width="12" height="40" fill="#2f1b3a"/>
+            </g>
+          </svg>
         </div>
       </div>
 
-      <div id="display" class="panel">Toque em um botao para comecar</div>
-
-      <div class="panel" id="memPanel" style="display:none">
-        <div style="font-size:13px;color:#5b6b86">Memorias (toque para ver no display)</div>
-        <div class="mem-list" id="memList" aria-live="polite"></div>
+      <!-- botoes abaixo -->
+      <div class="controls" role="toolbar">
+        <button id="btnPhrase" aria-label="Frase motivadora">Frase motivadora</button>
+        <button id="btnMemory" class="ghost" aria-label="Memoria">Memoria</button>
       </div>
 
-    </main>
-
-    <footer>
-      Dados locais. Privacidade garantida.
-    </footer>
-
-    <audio id="audioPlayer" preload="none"></audio>
+      <footer>Dados locais. Privacidade garantida.</footer>
+    </div>
   </div>
 
 <script>
-/* APP ATUALIZADO: pixel-art, memorias internas, modo escuro */
+/* Logica: frase/memoria no balao; dino grande centralizado; memorias internas; modo escuro persisted */
 (function(){
   const PHRASES = [
     "Voce ja passou por coisas dificeis e venceu. Confie em si.",
@@ -131,62 +107,74 @@
     "Lembre: ha sempre algo pelo qual ser grato hoje."
   ];
 
-  // memorias internas - pre carregadas (base do mascote)
   const MEMORIES = [
-    "Passeio no parque com amigos",
-    "Terminaro aquele projeto dificil",
-    "Aquele dia de risadas que nunca esqueci",
-    "Conquista: aprovada naquele teste importante",
-    "Cafe da manha tranquilo numa manha de sol"
+    "passeio no parque com amigos",
+    "terminou aquele projeto dificil",
+    "aquele dia de risadas que nunca esqueci",
+    "conquista: passou naquele exame importante",
+    "manha de sol e cafe gostoso"
   ];
 
-  const mascotEl = document.getElementById('mascotEl');
+  const bubble = document.getElementById('bubble');
   const btnPhrase = document.getElementById('btnPhrase');
-  const display = document.getElementById('display');
-  const btnMem = document.getElementById('btnMem');
-  const memPanel = document.getElementById('memPanel');
-  const memList = document.getElementById('memList');
-  const animChk = document.getElementById('animChk');
-  const animToggle = document.getElementById('animToggle');
-  const btnPlay = document.getElementById('btnPlay');
-  const audioPlayer = document.getElementById('audioPlayer');
+  const btnMemory = document.getElementById('btnMemory');
   const darkChk = document.getElementById('darkChk');
-  const darkToggle = document.getElementById('darkToggle');
-  const btnShare = document.getElementById('btnShare');
-
+  const animChk = document.getElementById('animChk');
+  const mascotSvg = document.getElementById('mascotSvg');
   const LS_DARK = 'mascote_dark_v1';
   const LS_ANIM = 'mascote_anim_v1';
 
-  // dark mode init
+  // helper: random item
+  function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  // show bubble with text, auto-hide after seconds
+  let hideTimer = null;
+  function showBubble(text, ttl=5000){
+    bubble.classList.remove('hidden');
+    bubble.textContent = text;
+    bubble.style.opacity = '1';
+    // push small translate animation
+    bubble.style.transform = 'translateY(0)';
+    if(hideTimer) clearTimeout(hideTimer);
+    hideTimer = setTimeout(()=> {
+      bubble.classList.add('hidden');
+    }, ttl);
+  }
+
+  // phrase button
+  btnPhrase.addEventListener('click', ()=>{
+    const t = rand(PHRASES);
+    showBubble(t, 5500);
+    // tiny scale feedback on mascot
+    mascotSvg.style.transform = 'scale(1.02)';
+    setTimeout(()=> mascotSvg.style.transform = '', 280);
+  });
+
+  // memory button: show "Lembra de quando ..." + memory
+  btnMemory.addEventListener('click', ()=>{
+    const m = rand(MEMORIES);
+    showBubble('Lembra de quando ' + m + '?', 6000);
+    mascotSvg.style.transform = 'scale(1.02)';
+    setTimeout(()=> mascotSvg.style.transform = '', 280);
+  });
+
+  // dark mode
   function setDark(on){
     if(on) document.documentElement.classList.add('dark');
     else document.documentElement.classList.remove('dark');
     try{ localStorage.setItem(LS_DARK, on ? '1' : '0'); }catch(e){}
     darkChk.checked = !!on;
   }
-  // anim init
+  // anim
   function setAnim(on){
-    if(on) mascotEl.classList.add('animate'); else mascotEl.classList.remove('animate');
+    // animate = bob movement via class on svg (we'll use css keyframes on .mascot if desired)
+    if(on) mascotSvg.style.animation = 'bob 2s ease-in-out infinite';
+    else mascotSvg.style.animation = '';
     try{ localStorage.setItem(LS_ANIM, on ? '1' : '0'); }catch(e){}
     animChk.checked = !!on;
   }
 
-  // share (gera link e copia para area de transferencia)
-  btnShare.addEventListener('click', async ()=>{
-    try{
-      const url = location.href;
-      if(navigator.share){
-        await navigator.share({title:'Mascote da Esperanca', text:'Um presente para voce', url});
-      } else {
-        await navigator.clipboard.writeText(url);
-        alert('Link copiado. Cole no WhatsApp para compartilhar');
-      }
-    }catch(e){
-      alert('Erro ao compartilhar');
-    }
-  });
-
-  // init saved prefs
+  // init preferences
   (function initPrefs(){
     try{
       const d = localStorage.getItem(LS_DARK);
@@ -198,71 +186,22 @@
     }
   })();
 
-  // frases motivadoras
-  btnPhrase.addEventListener('click', ()=>{
-    const txt = PHRASES[Math.floor(Math.random()*PHRASES.length)];
-    showDisplay(txt);
-    // leve feedback visual
-    mascotEl.style.transform = 'scale(1.02)';
-    setTimeout(()=> mascotEl.style.transform = '', 300);
-  });
+  // accessibility: show initial memory or greeting
+  (function boot(){
+    if(MEMORIES.length>0) showBubble('Lembra de quando ' + MEMORIES[MEMORIES.length-1] + '?', 4500);
+    else showBubble('Bem vindo! Toque em "Frase motivadora" para comecar', 4500);
+  })();
 
-  // memorias: abrir/fechar painel
-  btnMem.addEventListener('click', ()=>{
-    const show = memPanel.style.display !== 'block';
-    memPanel.style.display = show ? 'block' : 'none';
-    if(show) renderMemList();
-  });
-
-  function renderMemList(){
-    memList.innerHTML = '';
-    if(MEMORIES.length === 0){
-      memList.innerHTML = '<div class="mem-item" style="color:#666">Nenhuma memoria disponivel</div>';
-      return;
-    }
-    for(let i = MEMORIES.length-1; i >= 0; i--){
-      const div = document.createElement('div');
-      div.className = 'mem-item';
-      div.textContent = MEMORIES[i];
-      div.addEventListener('click', ()=> showDisplay(MEMORIES[i]));
-      memList.appendChild(div);
-    }
-  }
-
-  // audio: carrega apenas se existir arquivo musica.mp3 na mesma pasta
-  btnPlay.addEventListener('click', async ()=>{
-    if(!audioPlayer.src){
-      // instrucoes para adicionar arquivo: suba 'musica.mp3' na pasta do site
-      showDisplay('Coloque um arquivo "musica.mp3" na mesma pasta do site para tocar');
-      return;
-    }
-    try{
-      await audioPlayer.play();
-      showDisplay('Musica tocando...');
-    }catch(e){
-      showDisplay('Erro ao tocar audio.');
-    }
-  });
-
-  // toggles
+  // events toggles
   darkChk.addEventListener('change', ()=> setDark(darkChk.checked));
   animChk.addEventListener('change', ()=> setAnim(animChk.checked));
 
-  // display helper
-  function showDisplay(text){
-    display.textContent = text;
-  }
+  // small CSS keyframes for mascot if anim enabled - attach dynamic style block
+  const style = document.createElement('style');
+  style.innerHTML = '@keyframes bob {0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}';
+  document.head.appendChild(style);
 
-  // inicializacao: saudacao ou ultima memoria
-  (function boot(){
-    if(MEMORIES.length>0) showDisplay('Lembranca: ' + MEMORIES[MEMORIES.length-1]);
-    else showDisplay('Bem vindo! Toque em "Frase motivadora" para comecar.');
-  })();
-
-  // optional: register service worker
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
-  }
+  // unregister service worker hint (optional) - not executed, left out for safety
 
 })();
 </script>
