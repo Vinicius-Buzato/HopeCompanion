@@ -6,100 +6,122 @@
 <title>Mascote da Esperanca</title>
 <style>
   /* RESET MINIMO */
-  * {box-sizing:border-box; margin:0; padding:0; font-family: Arial, Helvetica, sans-serif;}
-  html,body {height:100%;}
-  body{display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#f5f8ff,#e8f0ff); color:#222;}
-  .app { width: 96vw; max-width:420px; background:#fff; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.08); padding:16px; }
-  header {display:flex; gap:12px; align-items:center; margin-bottom:12px;}
-  .title {font-weight:700; font-size:18px;}
-  .mascot { width:84px; height:84px; flex:0 0 84px; display:flex; align-items:center; justify-content:center; }
-  /* SVG bob animation */
-  .mascot svg { width:72px; height:72px; transition:transform .25s ease; }
-  .mascot.animate svg { animation:bob 2s ease-in-out infinite; }
-  @keyframes bob { 0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)} }
-  main {display:grid; gap:10px;}
-  .panel { background:#fbfdff; border-radius:8px; padding:10px; box-shadow: inset 0 1px 0 rgba(0,0,0,0.02); }
-  .row {display:flex; gap:8px; align-items:center;}
-  button {flex:1; padding:10px; border-radius:8px; border:0; background:#3466ff; color:#fff; font-weight:600; cursor:pointer;}
-  button.secondary {background:#6c757d;}
-  .small {font-size:13px; padding:8px;}
-  .mem-list {max-height:160px; overflow:auto; margin-top:8px; display:flex; flex-direction:column; gap:8px;}
-  .mem-item {background:#fff; border-radius:6px; padding:8px; box-shadow:0 1px 0 rgba(0,0,0,0.04); font-size:14px;}
-  label {font-size:13px; color:#444; margin-bottom:6px; display:block;}
-  input[type="text"]{width:100%; padding:8px; border-radius:6px; border:1px solid #ddd;}
-  .controls {display:flex; gap:8px;}
-  footer {margin-top:10px; font-size:12px; color:#666; text-align:center;}
-  .toggle {display:flex; align-items:center; gap:6px; cursor:pointer; user-select:none;}
-  audio {display:none;}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+  html,body{height:100%}
+  body{display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#f5f8ff,#e8f0ff);color:#111;transition:background .25s,color .25s}
+  .dark body, .dark{background:#0b0b0f;color:#e8eef8}
+  .app{width:96vw;max-width:420px;background:#fff;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:14px;transition:background .2s,color .2s}
+  .dark .app{background:#0f1720;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+  header{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+  .title{font-weight:700;font-size:18px}
+  .subtitle{font-size:13px;color:#5b6b86}
+  .dark .subtitle{color:#9fb0d9}
+  /* PIXEL ART MASCOT */
+  .mascot{width:84px;height:84px;flex:0 0 84px;display:flex;align-items:center;justify-content:center}
+  .mascot svg{width:72px;height:72px;image-rendering:pixelated;transition:transform .2s}
+  .mascot.animate svg{animation:bob 2s ease-in-out infinite}
+  @keyframes bob{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+  main{display:grid;gap:10px}
+  .panel{background:transparent;border-radius:8px;padding:8px}
+  /* minimal buttons */
+  .controls{display:flex;gap:8px}
+  button{flex:1;padding:10px;border-radius:10px;border:1px solid transparent;background:linear-gradient(180deg, rgba(52,102,255,0.12), rgba(52,102,255,0.06));color:#2347d6;font-weight:700;cursor:pointer;font-size:14px;backdrop-filter:blur(2px)}
+  .dark button{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));color:#bcd3ff;border:1px solid rgba(255,255,255,0.04)}
+  button.ghost{background:transparent;color:#666;border:1px solid rgba(0,0,0,0.06)}
+  .dark button.ghost{color:#a8bfdc;border-color:rgba(255,255,255,0.04)}
+  #display{min-height:72px;background:rgba(255,255,255,0.9);border-radius:10px;display:flex;align-items:center;justify-content:center;padding:10px;text-align:center;font-size:15px;box-shadow:inset 0 1px 0 rgba(0,0,0,0.02)}
+  .dark #display{background:rgba(255,255,255,0.02)}
+  .mem-list{display:flex;flex-direction:column;gap:8px;max-height:180px;overflow:auto;margin-top:8px}
+  .mem-item{padding:8px;border-radius:8px;background:linear-gradient(180deg,#fff,#fbfdff);font-size:14px;cursor:pointer;box-shadow:0 1px 0 rgba(0,0,0,.03)}
+  .dark .mem-item{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));box-shadow:none;color:#dbe9ff}
+  footer{margin-top:10px;font-size:12px;color:#6b7380;text-align:center}
+  .top-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+  .toggle{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;font-size:13px;color:#5b6b86}
+  .dark .toggle{color:#9fb0d9}
+  .small{font-size:13px;padding:8px}
+  audio{display:none}
+  /* responsive touch */
+  @media (max-width:380px){button{font-size:13px;padding:9px}}
 </style>
 </head>
 <body>
   <div class="app" role="application" aria-label="Mascote da Esperanca">
     <header>
       <div class="mascot animate" id="mascotEl" aria-hidden="true">
-        <!-- Mascote SVG simples, leve -->
-        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="32" cy="32" r="30" fill="#ffd966"/>
-          <circle cx="22" cy="26" r="4" fill="#222"/>
-          <circle cx="42" cy="26" r="4" fill="#222"/>
-          <path d="M20 40 Q32 48 44 40" stroke="#222" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-          <circle cx="32" cy="32" r="28" fill="none" stroke="#f4b400" stroke-width="2"/>
+        <!-- PIXEL-ART TRICERATOPS (cabeca) -->
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- base pixel grid: each rect is a "pixel" -->
+          <!-- tons de roxo -->
+          <rect x="0" y="0" width="32" height="32" fill="transparent"/>
+          <!-- preenchimento com blocos para formar a cabeca de triceratops -->
+          <!-- casco/horn pixels -->
+          <rect x="2" y="6" width="4" height="4" fill="#6a3aa6"/>
+          <rect x="5" y="4" width="4" height="4" fill="#6a3aa6"/>
+          <rect x="8" y="4" width="6" height="6" fill="#7b4bd1"/>
+          <rect x="14" y="6" width="6" height="6" fill="#8a64e6"/>
+          <rect x="20" y="8" width="6" height="6" fill="#6a3aa6"/>
+          <!-- chifres -->
+          <rect x="22" y="2" width="2" height="4" fill="#c9a8ff"/>
+          <rect x="6" y="2" width="2" height="4" fill="#c9a8ff"/>
+          <!-- rosto e detalhes -->
+          <rect x="10" y="10" width="12" height="10" fill="#6e3fb3"/>
+          <rect x="12" y="12" width="3" height="3" fill="#fff"/>
+          <rect x="17" y="12" width="3" height="3" fill="#fff"/>
+          <!-- olho escuro -->
+          <rect x="12" y="13" width="1" height="1" fill="#1a1a1a"/>
+          <rect x="18" y="13" width="1" height="1" fill="#1a1a1a"/>
+          <!-- bochecha levemente mais clara -->
+          <rect x="11" y="15" width="2" height="2" fill="#8b67d6"/>
+          <rect x="18" y="15" width="2" height="2" fill="#8b67d6"/>
+          <!-- contorno -->
+          <rect x="9" y="9" width="14" height="12" fill="none" stroke="#472569" stroke-width="0"/>
+          <!-- reflexo -->
+          <rect x="14" y="9" width="2" height="1" fill="#caa8ff"/>
         </svg>
       </div>
-      <div>
+      <div style="flex:1">
         <div class="title">Mascote da Esperanca</div>
-        <div style="font-size:13px;color:#666;">Um lembrete rapido: dias melhores viram</div>
+        <div class="subtitle">Um lembrete rapido: dias melhores viram</div>
       </div>
     </header>
 
     <main>
-      <!-- Interacoes principais -->
+      <div class="top-row">
+        <div class="toggle" id="darkToggle" title="Modo escuro">
+          <input id="darkChk" type="checkbox"> <span id="darkLabel">Modo escuro</span>
+        </div>
+        <div class="toggle" id="animToggle"><input id="animChk" type="checkbox" checked> Animacoes</div>
+      </div>
+
       <div class="panel">
-        <div class="row" style="margin-bottom:8px;">
+        <div class="controls" style="margin-bottom:8px">
           <button id="btnPhrase">Frase motivadora</button>
-          <button id="btnMemory" class="secondary small">Memorias</button>
+          <button id="btnMem" class="ghost small">Memorias</button>
         </div>
-        <div class="row">
-          <button id="btnPlay" class="small">Tocar musica</button>
-          <button id="btnAddMem" class="secondary small">Adicionar memoria</button>
+        <div class="controls">
+          <button id="btnPlay" class="small ghost">Tocar musica</button>
+          <button id="btnShare" class="small">Compartilhar</button>
         </div>
       </div>
 
-      <!-- Display area -->
-      <div id="display" class="panel" style="min-height:64px; display:flex; align-items:center; justify-content:center; font-size:15px; text-align:center;">
-        Clique em um botao para comecar
-      </div>
+      <div id="display" class="panel">Toque em um botao para comecar</div>
 
-      <!-- Memorias -->
-      <div class="panel" id="memPanel" style="display:none;">
-        <label>Minhas memorias (toque para remover)</label>
+      <div class="panel" id="memPanel" style="display:none">
+        <div style="font-size:13px;color:#5b6b86">Memorias (toque para ver no display)</div>
         <div class="mem-list" id="memList" aria-live="polite"></div>
-        <div style="margin-top:8px;">
-          <input id="memInput" type="text" placeholder="Escreva uma memoria curta (ex: passeio, conquista)">
-          <div style="display:flex; gap:8px; margin-top:8px;">
-            <button id="memSave">Salvar memoria</button>
-            <button id="memClose" class="secondary">Fechar</button>
-          </div>
-        </div>
       </div>
 
-      <!-- Opcoes -->
-      <div class="panel row" style="justify-content:space-between;">
-        <div class="toggle" id="animToggle"><input id="animChk" type="checkbox" checked> <span>Animacoes</span></div>
-        <div class="toggle"><button id="clearAll" class="secondary small">Limpar memorias</button></div>
-      </div>
     </main>
 
     <footer>
       Dados locais. Privacidade garantida.
     </footer>
 
-    <!-- Audio element (sera carregado sob demanda) -->
     <audio id="audioPlayer" preload="none"></audio>
   </div>
 
 <script>
-/* APP LIGHTWEIGHT - logic em vanilla JS */
+/* APP ATUALIZADO: pixel-art, memorias internas, modo escuro */
 (function(){
   const PHRASES = [
     "Voce ja passou por coisas dificeis e venceu. Confie em si.",
@@ -109,156 +131,138 @@
     "Lembre: ha sempre algo pelo qual ser grato hoje."
   ];
 
+  // memorias internas - pre carregadas (base do mascote)
+  const MEMORIES = [
+    "Passeio no parque com amigos",
+    "Terminaro aquele projeto dificil",
+    "Aquele dia de risadas que nunca esqueci",
+    "Conquista: aprovada naquele teste importante",
+    "Cafe da manha tranquilo numa manha de sol"
+  ];
+
   const mascotEl = document.getElementById('mascotEl');
   const btnPhrase = document.getElementById('btnPhrase');
   const display = document.getElementById('display');
-  const btnMemory = document.getElementById('btnMemory');
+  const btnMem = document.getElementById('btnMem');
   const memPanel = document.getElementById('memPanel');
   const memList = document.getElementById('memList');
-  const memInput = document.getElementById('memInput');
-  const memSave = document.getElementById('memSave');
-  const memClose = document.getElementById('memClose');
-  const btnAddMem = document.getElementById('btnAddMem');
   const animChk = document.getElementById('animChk');
   const animToggle = document.getElementById('animToggle');
-  const clearAll = document.getElementById('clearAll');
-  const audioPlayer = document.getElementById('audioPlayer');
   const btnPlay = document.getElementById('btnPlay');
+  const audioPlayer = document.getElementById('audioPlayer');
+  const darkChk = document.getElementById('darkChk');
+  const darkToggle = document.getElementById('darkToggle');
+  const btnShare = document.getElementById('btnShare');
 
-  const LS_KEY = 'mascote_memorias_v1';
+  const LS_DARK = 'mascote_dark_v1';
+  const LS_ANIM = 'mascote_anim_v1';
 
-  // util: carregar memorias do localStorage
-  function loadMemories(){
+  // dark mode init
+  function setDark(on){
+    if(on) document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+    try{ localStorage.setItem(LS_DARK, on ? '1' : '0'); }catch(e){}
+    darkChk.checked = !!on;
+  }
+  // anim init
+  function setAnim(on){
+    if(on) mascotEl.classList.add('animate'); else mascotEl.classList.remove('animate');
+    try{ localStorage.setItem(LS_ANIM, on ? '1' : '0'); }catch(e){}
+    animChk.checked = !!on;
+  }
+
+  // share (gera link e copia para area de transferencia)
+  btnShare.addEventListener('click', async ()=>{
     try{
-      const raw = localStorage.getItem(LS_KEY);
-      return raw ? JSON.parse(raw) : [];
-    }catch(e){ return []; }
-  }
-  // util: salvar memorias
-  function saveMemories(arr){
-    try{ localStorage.setItem(LS_KEY, JSON.stringify(arr)); }catch(e){}
-  }
-
-  // mostrar frase motivadora aleatoria
-  btnPhrase.addEventListener('click', () => {
-    const txt = PHRASES[Math.floor(Math.random() * PHRASES.length)];
-    showDisplay(txt);
-    // leve feedback: pequeno grow
-    mascotEl.classList.add('pulse');
-    setTimeout(()=> mascotEl.classList.remove('pulse'), 450);
+      const url = location.href;
+      if(navigator.share){
+        await navigator.share({title:'Mascote da Esperanca', text:'Um presente para voce', url});
+      } else {
+        await navigator.clipboard.writeText(url);
+        alert('Link copiado. Cole no WhatsApp para compartilhar');
+      }
+    }catch(e){
+      alert('Erro ao compartilhar');
+    }
   });
 
-  // mostrar/alternar painel de memorias
-  btnMemory.addEventListener('click', ()=> toggleMemPanel(true));
-  memClose.addEventListener('click', ()=> toggleMemPanel(false));
-  btnAddMem.addEventListener('click', ()=> toggleMemPanel(true));
+  // init saved prefs
+  (function initPrefs(){
+    try{
+      const d = localStorage.getItem(LS_DARK);
+      setDark(d === '1');
+      const a = localStorage.getItem(LS_ANIM);
+      setAnim(a === null ? true : (a === '1'));
+    }catch(e){
+      setDark(false); setAnim(true);
+    }
+  })();
 
-  function toggleMemPanel(show){
+  // frases motivadoras
+  btnPhrase.addEventListener('click', ()=>{
+    const txt = PHRASES[Math.floor(Math.random()*PHRASES.length)];
+    showDisplay(txt);
+    // leve feedback visual
+    mascotEl.style.transform = 'scale(1.02)';
+    setTimeout(()=> mascotEl.style.transform = '', 300);
+  });
+
+  // memorias: abrir/fechar painel
+  btnMem.addEventListener('click', ()=>{
+    const show = memPanel.style.display !== 'block';
     memPanel.style.display = show ? 'block' : 'none';
     if(show) renderMemList();
-  }
+  });
 
-  // renderizar lista de memorias
   function renderMemList(){
     memList.innerHTML = '';
-    const arr = loadMemories();
-    if(arr.length === 0){
-      memList.innerHTML = '<div class="mem-item" style="color:#666;">Nenhuma memoria salva ainda</div>';
+    if(MEMORIES.length === 0){
+      memList.innerHTML = '<div class="mem-item" style="color:#666">Nenhuma memoria disponivel</div>';
       return;
     }
-    // inserir do mais recente para o mais antigo
-    for(let i = arr.length-1; i >= 0; i--){
-      const item = arr[i];
+    for(let i = MEMORIES.length-1; i >= 0; i--){
       const div = document.createElement('div');
       div.className = 'mem-item';
-      div.textContent = item;
-      // toque para mostrar no display
-      div.addEventListener('click', ()=> showDisplay(item));
-      // toque longo para remover (mobile-friendly: duplo clique)
-      div.addEventListener('dblclick', ()=> {
-        if(confirm('Remover esta memoria?')) {
-          arr.splice(i,1);
-          saveMemories(arr);
-          renderMemList();
-        }
-      });
+      div.textContent = MEMORIES[i];
+      div.addEventListener('click', ()=> showDisplay(MEMORIES[i]));
       memList.appendChild(div);
     }
   }
 
-  // salvar memoria
-  memSave.addEventListener('click', ()=>{
-    const v = memInput.value.trim();
-    if(!v) { alert('Escreva algo antes de salvar'); return; }
-    const arr = loadMemories();
-    arr.push(v);
-    saveMemories(arr);
-    memInput.value = '';
-    renderMemList();
-    showDisplay('Memoria salva :)');
-  });
-
-  // limpar tudo
-  clearAll.addEventListener('click', ()=>{
-    if(confirm('Remover todas as memorias?')){
-      saveMemories([]);
-      renderMemList();
-      showDisplay('Memorias removidas');
-    }
-  });
-
-  // display helper
-  function showDisplay(text){
-    display.textContent = text;
-    // pequena animacao de destaque
-    display.style.opacity = '0.95';
-    setTimeout(()=> display.style.opacity = '1', 120);
-  }
-
-  // animacoes on/off
-  animChk.addEventListener('change', (e)=>{
-    if(e.target.checked) mascotEl.classList.add('animate'); else mascotEl.classList.remove('animate');
-  });
-
-  // musica: carregar arquivo quando o usuario pedir
+  // audio: carrega apenas se existir arquivo musica.mp3 na mesma pasta
   btnPlay.addEventListener('click', async ()=>{
-    // se audio vazio, carregamos um pequeno mp3 (ou voce pode apontar para URL)
     if(!audioPlayer.src){
-      // Exemplo: voce pode usar um arquivo local 'musica.mp3' na mesma pasta
-      // Ou setar uma url remota curta. Aqui deixamos comentario para o dev incluir.
-      // audioPlayer.src = 'musica_curta.mp3';
-      // Para demo sem arquivo, mostramos mensagem
-      showDisplay('Adicione um arquivo "musica.mp3" na pasta do site para tocar');
+      // instrucoes para adicionar arquivo: suba 'musica.mp3' na pasta do site
+      showDisplay('Coloque um arquivo "musica.mp3" na mesma pasta do site para tocar');
       return;
     }
     try{
       await audioPlayer.play();
       showDisplay('Musica tocando...');
     }catch(e){
-      showDisplay('Erro ao tocar. Verifique a fonte do audio.');
+      showDisplay('Erro ao tocar audio.');
     }
   });
 
-  // registro de service worker (se hospedado via http/https)
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('service-worker.js').then(()=> {
-      console.log('SW registrado');
-    }).catch(()=>{ /* falha silenciosa */ });
+  // toggles
+  darkChk.addEventListener('change', ()=> setDark(darkChk.checked));
+  animChk.addEventListener('change', ()=> setAnim(animChk.checked));
+
+  // display helper
+  function showDisplay(text){
+    display.textContent = text;
   }
 
-  // inicializacao
-  (function init(){
-    // garantir o estado do checkbox
-    animChk.checked = true;
-    // start anim
-    mascotEl.classList.add('animate');
-    // render memoria (se painel estiver aberto)
-    // carregar memorias se necessario
-    // opcional: mostrar saudacao
-    const mems = loadMemories();
-    if(mems.length>0) showDisplay('Bom lembrar: ' + mems[mems.length-1]);
-    else showDisplay('Bem vindo! Clique em "Frase motivadora" para comecar.');
+  // inicializacao: saudacao ou ultima memoria
+  (function boot(){
+    if(MEMORIES.length>0) showDisplay('Lembranca: ' + MEMORIES[MEMORIES.length-1]);
+    else showDisplay('Bem vindo! Toque em "Frase motivadora" para comecar.');
   })();
+
+  // optional: register service worker
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  }
 
 })();
 </script>
