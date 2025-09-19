@@ -4,81 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mascote da Esperanca</title>
-<style>
-  /* RESET + base */
-  *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
-  html,body{height:100%}
-  body{display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#eef2ff,#e6e9ff);color:#111;transition:background .25s,color .25s}
-  .dark body, .dark{background:#0b0f18;color:#e6eef8}
-  .wrap{width:100vw;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
-  .app{width:100%;max-width:520px;background:transparent;border-radius:12px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:12px}
-  /* MASCOT AREA - center large */
-  .mascot-area{width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
-  .mascot-wrap{width:100%;display:flex;align-items:center;justify-content:center}
-  .mascot{width:320px;height:320px;image-rendering:pixelated;display:block}
-  @media (max-width:420px){ .mascot{width:260px;height:260px} }
-  /* Speech bubble */
-  .bubble-wrap{position:relative;width:100%;display:flex;justify-content:center;pointer-events:none}
-  .bubble{max-width:88%;min-height:56px;background:linear-gradient(180deg,#ffffff,#f3f7ff);padding:12px 14px;border-radius:14px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 8px 24px rgba(20,30,80,0.06);font-size:16px;text-align:center;pointer-events:auto;transition:transform .18s ease,opacity .18s}
-  .dark .bubble{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-color:rgba(255,255,255,0.04);box-shadow:none;color:#dbe9ff}
-  .bubble::after{content:'';position:absolute;left:50%;transform:translateX(-50%);bottom:-10px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:10px solid #fff}
-  .dark .bubble::after{border-top-color:rgba(255,255,255,0.02)}
-  .bubble.hidden{opacity:0;transform:translateY(-6px);pointer-events:none}
-  /* Buttons minimal */
-  .controls{display:flex;gap:10px;width:100%;max-width:420px;justify-content:center;padding-top:6px}
-  button{padding:10px 14px;border-radius:999px;border:0;background:#fff;color:#3b49d6;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(35,55,160,0.08);font-size:14px;min-width:120px}
-  .dark button{background:rgba(255,255,255,0.03);color:#cfe0ff;box-shadow:none;border:1px solid rgba(255,255,255,0.03)}
-  button.ghost{background:transparent;color:#666;border:1px solid rgba(0,0,0,0.06)}
-  .dark button.ghost{color:#a8bfdc;border-color:rgba(255,255,255,0.03)}
-  .top-controls{display:flex;gap:8px;align-items:center;justify-content:center;width:100%}
-  .small-toggle{font-size:13px;color:#556680;cursor:pointer}
-  .dark .small-toggle{color:#93ace2}
-  footer{margin-top:4px;font-size:12px;color:#6b7380;text-align:center}
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="wrap">
     <div class="app" role="application" aria-label="Mascote da Esperanca">
-      <!-- opcao topo -->
-      <div class="top-controls">
-        <label class="small-toggle"><input id="darkChk" type="checkbox"> Modo escuro</label>
-        <label style="margin-left:10px" class="small-toggle"><input id="animChk" type="checkbox" checked> Animacoes</label>
-      </div>
-
-      <!-- area mascote centralizada -->
       <div class="mascot-area">
         <div class="bubble-wrap">
           <div id="bubble" class="bubble hidden" aria-live="polite"> </div>
         </div>
 
         <div class="mascot-wrap">
-          <!-- SVG pixel-art triceratops roxo (maior, parecido com referencia) -->
+          <!-- SVG pixel-art triceratops roxo (maior) -->
           <svg id="mascotSvg" class="mascot" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect width="128" height="128" fill="transparent"/>
-            <!-- Pixel grid built with rectangles - purple palette inspired by the image -->
-            <!-- Main head/body pixels -->
-            <!-- Row definitions - simplified block art -->
-            <!-- Note: using larger rects to form pixel look; image-rendering:pixelated applied -->
             <g>
-              <!-- background outline -->
               <rect x="8" y="36" width="104" height="56" fill="#2f1b3a"/>
-              <!-- fill head -->
               <rect x="12" y="40" width="96" height="48" fill="#6f46b9"/>
-              <!-- lighter regions -->
               <rect x="68" y="44" width="20" height="12" fill="#9571e6"/>
               <rect x="28" y="48" width="18" height="10" fill="#8b63d9"/>
-              <!-- nostril / face detail -->
               <rect x="34" y="62" width="6" height="6" fill="#2b1a2f"/>
-              <!-- eye -->
               <rect x="54" y="54" width="10" height="10" fill="#ffffff"/>
               <rect x="56" y="56" width="4" height="4" fill="#151515"/>
-              <!-- horns -->
               <rect x="84" y="28" width="10" height="14" fill="#eac56e"/>
               <rect x="18" y="24" width="10" height="14" fill="#eac56e"/>
               <rect x="28" y="12" width="16" height="12" fill="#f5d79b" opacity="0.95"/>
-              <!-- cheek sparkle -->
               <rect x="46" y="66" width="6" height="6" fill="#b69ef5" opacity="0.9"/>
-              <!-- decorative darker edges for pixel look -->
               <rect x="100" y="44" width="12" height="40" fill="#2f1b3a"/>
               <rect x="8" y="44" width="12" height="40" fill="#2f1b3a"/>
             </g>
@@ -86,18 +37,24 @@
         </div>
       </div>
 
-      <!-- botoes abaixo -->
+      <!-- botoes abaixo, agora com dark toggle como icone -->
       <div class="controls" role="toolbar">
         <button id="btnPhrase" aria-label="Frase motivadora">Frase motivadora</button>
         <button id="btnMemory" class="ghost" aria-label="Memoria">Memoria</button>
+        <button id="btnDark" class="icon-btn" aria-label="Alternar modo"> 
+          <!-- icon (sun/moon) sera trocado via JS alterando classe -->
+          <svg id="darkIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path id="iconPath" d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="#3b49d6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="4" fill="#3b49d6"/>
+          </svg>
+        </button>
       </div>
 
-      <footer>Dados locais. Privacidade garantida.</footer>
     </div>
   </div>
 
 <script>
-/* Logica: frase/memoria no balao; dino grande centralizado; memorias internas; modo escuro persisted */
+/* JS principal (mantido inline para simplicidade). Ajustes: bubble, memoria aleatoria, dark toggle icone */
 (function(){
   const PHRASES = [
     "Voce ja passou por coisas dificeis e venceu. Confie em si.",
@@ -118,90 +75,71 @@
   const bubble = document.getElementById('bubble');
   const btnPhrase = document.getElementById('btnPhrase');
   const btnMemory = document.getElementById('btnMemory');
-  const darkChk = document.getElementById('darkChk');
-  const animChk = document.getElementById('animChk');
+  const btnDark = document.getElementById('btnDark');
+  const darkIconPath = document.getElementById('iconPath');
   const mascotSvg = document.getElementById('mascotSvg');
+
   const LS_DARK = 'mascote_dark_v1';
   const LS_ANIM = 'mascote_anim_v1';
 
-  // helper: random item
   function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-  // show bubble with text, auto-hide after seconds
   let hideTimer = null;
-  function showBubble(text, ttl=5000){
+  function showBubble(text, ttl=5200){
     bubble.classList.remove('hidden');
     bubble.textContent = text;
-    bubble.style.opacity = '1';
-    // push small translate animation
-    bubble.style.transform = 'translateY(0)';
     if(hideTimer) clearTimeout(hideTimer);
-    hideTimer = setTimeout(()=> {
-      bubble.classList.add('hidden');
-    }, ttl);
+    hideTimer = setTimeout(()=> bubble.classList.add('hidden'), ttl);
   }
 
-  // phrase button
   btnPhrase.addEventListener('click', ()=>{
-    const t = rand(PHRASES);
-    showBubble(t, 5500);
-    // tiny scale feedback on mascot
-    mascotSvg.style.transform = 'scale(1.02)';
-    setTimeout(()=> mascotSvg.style.transform = '', 280);
+    showBubble(rand(PHRASES));
+    mascotPop();
   });
 
-  // memory button: show "Lembra de quando ..." + memory
   btnMemory.addEventListener('click', ()=>{
-    const m = rand(MEMORIES);
-    showBubble('Lembra de quando ' + m + '?', 6000);
-    mascotSvg.style.transform = 'scale(1.02)';
-    setTimeout(()=> mascotSvg.style.transform = '', 280);
+    showBubble('Lembra de quando ' + rand(MEMORIES) + '?');
+    mascotPop();
   });
 
-  // dark mode
+  function mascotPop(){
+    mascotSvg.style.transform = 'scale(1.02)';
+    setTimeout(()=> mascotSvg.style.transform = '', 260);
+  }
+
+  // dark mode toggle: on click change class on documentElement and persist; update icon visually
   function setDark(on){
-    if(on) document.documentElement.classList.add('dark');
-    else document.documentElement.classList.remove('dark');
+    if(on) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark');
     try{ localStorage.setItem(LS_DARK, on ? '1' : '0'); }catch(e){}
-    darkChk.checked = !!on;
+    updateIcon(on);
   }
-  // anim
-  function setAnim(on){
-    // animate = bob movement via class on svg (we'll use css keyframes on .mascot if desired)
-    if(on) mascotSvg.style.animation = 'bob 2s ease-in-out infinite';
-    else mascotSvg.style.animation = '';
-    try{ localStorage.setItem(LS_ANIM, on ? '1' : '0'); }catch(e){}
-    animChk.checked = !!on;
-  }
-
-  // init preferences
-  (function initPrefs(){
-    try{
-      const d = localStorage.getItem(LS_DARK);
-      setDark(d === '1');
-      const a = localStorage.getItem(LS_ANIM);
-      setAnim(a === null ? true : (a === '1'));
-    }catch(e){
-      setDark(false); setAnim(true);
+  function updateIcon(isDark){
+    // simple icon swap: moon if dark, sun if light (we change path stroke/fill)
+    if(isDark){
+      darkIconPath.setAttribute('d', 'M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z'); // moon-like path
+      darkIconPath.setAttribute('stroke', '#cfe0ff');
+      darkIconPath.setAttribute('fill', '#cfe0ff');
+    } else {
+      darkIconPath.setAttribute('d', 'M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42');
+      darkIconPath.setAttribute('stroke', '#3b49d6');
+      darkIconPath.setAttribute('fill', '#3b49d6');
     }
+  }
+
+  // init prefs
+  (function init(){
+    const d = localStorage.getItem(LS_DARK);
+    setDark(d === '1');
+    // boot message
+    if(MEMORIES.length>0) showBubble('Lembra de quando ' + MEMORIES[MEMORIES.length-1] + '?', 4200);
+    else showBubble('Bem vindo! Toque em "Frase motivadora" para comecar', 4200);
   })();
 
-  // accessibility: show initial memory or greeting
-  (function boot(){
-    if(MEMORIES.length>0) showBubble('Lembra de quando ' + MEMORIES[MEMORIES.length-1] + '?', 4500);
-    else showBubble('Bem vindo! Toque em "Frase motivadora" para comecar', 4500);
-  })();
-
-  // events toggles
-  darkChk.addEventListener('change', ()=> setDark(darkChk.checked));
-  animChk.addEventListener('change', ()=> setAnim(animChk.checked));
-
-  // small CSS keyframes for mascot if anim enabled - attach dynamic style block
-  const style = document.createElement('style');
-  style.innerHTML = '@keyframes bob {0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}';
-  document.head.appendChild(style);
-
-  // unregister service worker hint (optional) - not executed, left out for safety
+  btnDark.addEventListener('click', ()=>{
+    const isDark = document.documentElement.classList.toggle('dark');
+    try{ localStorage.setItem(LS_DARK, isDark ? '1' : '0'); }catch(e){}
+    updateIcon(isDark);
+  });
 
 })();
 </script>
